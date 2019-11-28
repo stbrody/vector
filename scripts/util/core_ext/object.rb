@@ -26,12 +26,17 @@ class Object
       is_a?(Float)
   end
 
-  def to_toml
+  def to_toml(hash_style: :inline)
     if is_a?(Hash)
       values = select { |_k, v| !v.nil? }.collect { |k, v| "#{k} = #{v.to_toml}" }
-      values.join("\n")
+
+      if hash_style == :inline
+        "{#{values.join(", ")}}"
+      else
+        values.join("\n")
+      end
     elsif is_a?(Array)
-      values = select { |v| !v.nil? }.collect { |v| v.to_toml }
+      values = select { |v| !v.nil? }.collect { |v| v.to_toml(hash_style: :inline) }
       if any? { |v| v.is_a?(Hash) }
         "[\n" + values.join(",\n") + "\n]"
       else
