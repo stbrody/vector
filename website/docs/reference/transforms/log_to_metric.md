@@ -271,14 +271,16 @@ structure:
 
 ```javascript
 {
-  "histogram": {
-    "name": "time_ms",
-    "val": 52.2,
-    "smaple_rate": 1,
-    "tags": {
-      "status": "200",
-      "host": "10.22.11.222"
-    }
+  "name": "time_ms",
+  "kind": "incremental",
+  "tags": {
+    "status": "200",
+    "host": "10.22.11.222"
+  }
+  "value": {
+    "type": "distribution",
+    "values": [52.2],
+    "sample_rates": [1.0]
   }
 }
 ```
@@ -321,13 +323,15 @@ structure:
 
 ```javascript
 {
-  "counter": {
-    "name": "response_total",
-    "val": 1.0,
-    "tags": {
-      "status": "200",
-      "host": "10.22.11.222"
-    }
+  "name": "response_total",
+  "kind": "incremental",
+  "tags": {
+    "status": "200",
+    "host": "10.22.11.222"
+  }
+  "value": {
+    "type": "counter",
+    "value": 1.0,
   }
 }
 ```
@@ -372,12 +376,15 @@ structure:
 
 ```javascript
 {
-  "counter": {
-    "name": "order_total",
-    "val": 122.20,
-    "tags": {
-      "host": "10.22.11.222"
-    }
+  "name": "order_total",
+  "kind": "incremental",
+  "tags": {
+    "status": "200",
+    "host": "10.22.11.222"
+  }
+  "value": {
+    "type": "counter",
+    "value": 122.20,
   }
 }
 ```
@@ -432,30 +439,36 @@ structure:
 ```javascript
 [
   {
-    "gauge": {
-      "name": "1m_load_avg",
-      "val": 78.2,
-      "tags": {
-        "host": "10.22.11.222"
-      }
+    "name": "1m_load_avg",
+    "kind": "absolute",
+    "tags": {
+      "host": "10.22.11.222"
+    },
+    "value": {
+      "type": "gauge",
+      "value": 78.2
     }
   },
   {
-    "gauge": {
-      "name": "5m_load_avg",
-      "val": 56.2,
-      "tags": {
-        "host": "10.22.11.222"
-      }
+    "name": "5m_load_avg",
+    "kind": "absolute",
+    "tags": {
+      "host": "10.22.11.222"
+    },
+    "value": {
+      "type": "gauge",
+      "value": 56.2
     }
   },
   {
-    "gauge": {
-      "name": "15m_load_avg",
-      "val": 48.7,
-      "tags": {
-        "host": "10.22.11.222"
-      }
+    "name": "15m_load_avg",
+    "kind": "absolute",
+    "tags": {
+      "host": "10.22.11.222"
+    },
+    "value": {
+      "type": "gauge",
+      "value": 48.7
     }
   }
 ]
@@ -500,12 +513,14 @@ structure:
 
 ```javascript
 {
-  "set": {
-    "name": "remote_addr",
-    "val": "233.221.232.22",
-    "tags": {
-      "host": "10.22.11.222"
-    }
+  "name": "remote_addr",
+  "kind": "incremental",
+  "tags": {
+    "host": "10.22.11.222"
+  },
+  "value": {
+    "type": "set",
+    "values": ["233.221.232.22"]
   }
 }
 ```
