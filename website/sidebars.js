@@ -120,6 +120,8 @@ module.exports = {
             
               "reference/sources/kafka",
             
+              "reference/sources/prometheus",
+            
               "reference/sources/statsd",
             
               "reference/sources/stdin",

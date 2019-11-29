@@ -612,6 +612,27 @@ module.exports = {
 
       ]
     },
+    "prometheus": {
+      "beta": true,
+      "delivery_guarantee": "best_effort",
+      "event_types": [
+        "metric"
+      ],
+      "function_category": "receive",
+      "id": "prometheus_source",
+      "name": "prometheus",
+      "operating_systems": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "service_provider": null,
+      "status": "beta",
+      "type": "source",
+      "unsupported_operating_systems": [
+
+      ]
+    },
     "statsd": {
       "beta": true,
       "delivery_guarantee": "best_effort",
