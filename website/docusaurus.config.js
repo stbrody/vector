@@ -149,5 +149,6 @@ module.exports = {
   stylesheets: [
     'https://fonts.googleapis.com/css?family=Ubuntu|Roboto|Source+Code+Pro',
     'https://at-ui.github.io/feather-font/css/iconfont.css',
+    ''
   ],
 };
