@@ -214,6 +214,52 @@ mod tests {
     }
 
     #[test]
+    fn concat_to_from_array_ele() {
+        let mut event = Event::from("message");
+        event
+            .as_mut_log()
+            .insert_explicit("nested.array[0]".into(), "Hello vector users".into());
+        event
+            .as_mut_log()
+            .insert_explicit("nested.array[1]".into(), "There aren't enough memes in the world".into());
+
+        let mut transform = Concat::new(
+            "out".into(),
+            " ".into(),
+            vec![
+                Substring::new(&"nested.array[0][..5]".into()).unwrap(),
+                Substring::new(&"nested.array[1][-5..]".into()).unwrap(),
+            ],
+        );
+
+        let new_event = transform.transform(event).unwrap();
+        assert_eq!(new_event.as_log()[&"out".into()], "Hello world".into());
+    }
+
+    #[test]
+    fn concat_full_array_ele() {
+        let mut event = Event::from("message");
+        event
+            .as_mut_log()
+            .insert_explicit("nested.array[0]".into(), "Hello vector".into());
+        event
+            .as_mut_log()
+            .insert_explicit("nested.array[1]".into(), "world".into());
+
+        let mut transform = Concat::new(
+            "out".into(),
+            " ".into(),
+            vec![
+                Substring::new(&"nested.array[0]".into()).unwrap(),
+                Substring::new(&"nested.array[1]".into()).unwrap(),
+            ],
+        );
+
+        let new_event = transform.transform(event).unwrap();
+        assert_eq!(new_event.as_log()[&"out".into()], "Hello vector world".into());
+    }
+
+    #[test]
     fn concat_full() {
         let mut event = Event::from("message");
         event
