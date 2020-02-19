@@ -74,7 +74,7 @@ impl TransformConfig for DedupeConfig {
     }
 }
 
-type CacheEntry = Vec<(TypeId, Bytes)>;
+type CacheEntry = Vec<Option<(TypeId, Bytes)>>;
 
 fn type_id_for_value(val: &Value) -> TypeId {
     match val {
@@ -105,7 +105,9 @@ impl Dedupe {
 
         for field_name in self.config.fields.match_fields.iter() {
             if let Some(value) = event.as_log().get(field_name) {
-                entry.push((type_id_for_value(&value), value.as_bytes()));
+                entry.push(Some((type_id_for_value(&value), value.as_bytes())));
+            } else {
+                entry.push(None);
             }
         }
 
@@ -158,6 +160,26 @@ mod tests {
 
         // Third event has the same value for "matched" as first event, so it should be dropped.
         assert_eq!(None, transform.transform(event3));
+    }
+
+    #[test]
+    fn dedupe_test_field_name_matters() {
+        let mut event1 = Event::from("message");
+        event1.as_mut_log().insert("matched1", "some value");
+
+        let mut event2 = Event::from("message");
+        event2.as_mut_log().insert("matched2", "some value");
+
+        let mut transform = Dedupe::new(5, vec!["matched1".into(), "matched2".into()]);
+
+        // First event should always be passed through as-is.
+        let new_event = transform.transform(event1).unwrap();
+        assert_eq!(new_event.as_log()[&"matched1".into()], "some value".into());
+
+        // Second event has a different matched field name with the same value, so it should not be
+        // considered a dupe
+        let new_event = transform.transform(event2).unwrap();
+        assert_eq!(new_event.as_log()[&"matched2".into()], "some value".into());
     }
 
     /**
