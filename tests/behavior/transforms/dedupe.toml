@@ -1,0 +1,18 @@
+[transforms.dedupe_simple]
+  inputs = []
+  type = "dedupe"
+  fields.match = ["a"]
+[[tests]]
+  name = "dedupe_simple"
+  [tests.input]
+    insert_at = "dedupe_simple"
+    type = "log"
+    [tests.input.log_fields]
+      a = 3
+      b = 4
+  [[tests.outputs]]
+    extract_from = "dedupe_simple"
+    [[tests.outputs.conditions]]
+      type = "check_fields"
+      "a.equals" = 3
+      "b.equals" = 4
