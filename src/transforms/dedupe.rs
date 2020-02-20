@@ -1,8 +1,7 @@
 use super::Transform;
 use crate::{
     event::{Event, Value},
-    runtime::TaskExecutor,
-    topology::config::{DataType, TransformConfig, TransformDescription},
+    topology::config::{DataType, TransformConfig, TransformContext, TransformDescription},
 };
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
@@ -54,7 +53,7 @@ inventory::submit! {
 
 #[typetag::serde(name = "dedupe")]
 impl TransformConfig for DedupeConfig {
-    fn build(&self, _exec: TaskExecutor) -> crate::Result<Box<dyn Transform>> {
+    fn build(&self, _cx: TransformContext) -> crate::Result<Box<dyn Transform>> {
         Ok(Box::new(Dedupe::new(
             self.cache.num_entries,
             self.fields.match_fields.clone(),
