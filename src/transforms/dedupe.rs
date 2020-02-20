@@ -98,9 +98,11 @@ impl Dedupe {
     }
 
     /**
-     * Takes in an Event and returns a new Event with only the fields that are being matched against.
+     * Takes in an Event and returns a CacheEntry to place into the LRU cache containing
+     * all relevant information for the fields that need matching against according to the
+     * specified FieldMatchConfig.
      **/
-    pub fn extract_matched_fields(&self, event: &Event) -> CacheEntry {
+    pub fn build_cache_entry(&self, event: &Event) -> CacheEntry {
         let mut entry = CacheEntry::new();
 
         for field_name in self.config.fields.match_fields.iter() {
@@ -117,7 +119,7 @@ impl Dedupe {
 
 impl Transform for Dedupe {
     fn transform(&mut self, event: Event) -> Option<Event> {
-        let cache_entry = self.extract_matched_fields(&event);
+        let cache_entry = self.build_cache_entry(&event);
         if self.cache.put(cache_entry, true).is_some() {
             None
         } else {
