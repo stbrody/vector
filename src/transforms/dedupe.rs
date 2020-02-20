@@ -8,6 +8,7 @@ use chrono::{DateTime, Utc};
 use lru::LruCache;
 use serde::{Deserialize, Serialize};
 use std::any::TypeId;
+use std::collections::HashMap;
 use string_cache::DefaultAtom as Atom;
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -82,6 +83,8 @@ fn type_id_for_value(val: &Value) -> TypeId {
         Value::Integer(_) => TypeId::of::<i64>(),
         Value::Float(_) => TypeId::of::<f64>(),
         Value::Boolean(_) => TypeId::of::<bool>(),
+        Value::Map(_) => TypeId::of::<HashMap<Atom, Value>>(),
+        Value::Array(_) => TypeId::of::<Vec<Value>>(),
     }
 }
 
