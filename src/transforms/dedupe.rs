@@ -97,11 +97,9 @@ impl Dedupe {
         }
     }
 
-    /**
-     * Takes in an Event and returns a CacheEntry to place into the LRU cache containing
-     * all relevant information for the fields that need matching against according to the
-     * specified FieldMatchConfig.
-     **/
+    // Takes in an Event and returns a CacheEntry to place into the LRU cache containing
+    // all relevant information for the fields that need matching against according to the
+    // specified FieldMatchConfig.
     pub fn build_cache_entry(&self, event: &Event) -> CacheEntry {
         let mut entry = CacheEntry::new();
 
@@ -184,15 +182,13 @@ mod tests {
         assert_eq!(new_event.as_log()[&"matched2".into()], "some value".into());
     }
 
-    /**
-     * Test that two Events that are considered duplicates get handled that way, even
-     * if the order of the matched fields is different between the two.
-     * Note that this test is a bit non-deterministic in its ability to test the underlying
-     * issue (meaning it's possible for this test to pass even if the bug of the transform
-     * caring about field order is present).  This is difficult to avoid because Event is
-     * backed by a HashMap and there's no way to deterministically control what order the
-     * objects will be stored in table underlying the HashMap.
-     **/
+    // Test that two Events that are considered duplicates get handled that way, even
+    // if the order of the matched fields is different between the two.
+    // Note that this test is a bit non-deterministic in its ability to test the underlying
+    // issue (meaning it's possible for this test to pass even if the bug of the transform
+    // caring about field order is present).  This is difficult to avoid because Event is
+    // backed by a HashMap and there's no way to deterministically control what order the
+    // objects will be stored in table underlying the HashMap.
     #[test]
     fn dedupe_test_field_order_irrelevant() {
         let mut event1 = Event::from("message");
@@ -245,10 +241,8 @@ mod tests {
         assert_eq!(new_event.as_log()[&"matched".into()], "some value".into());
     }
 
-    /**
-     * Test that two events with values for the matched fields that have different
-     * types but the same string representation aren't considered duplicates.
-     */
+    // Test that two events with values for the matched fields that have different
+    // types but the same string representation aren't considered duplicates.
     #[test]
     fn dedupe_test_type_matching() {
         let mut event1 = Event::from("message");
