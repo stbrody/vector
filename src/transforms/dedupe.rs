@@ -131,7 +131,9 @@ impl Transform for Dedupe {
 #[cfg(test)]
 mod tests {
     use super::Dedupe;
-    use crate::{event::Event, transforms::Transform};
+    use crate::{event::Event, event::Value, transforms::Transform};
+    use std::collections::HashMap;
+    use string_cache::DefaultAtom as Atom;
 
     #[test]
     fn dedupe_test_basic_matching() {
@@ -263,5 +265,37 @@ mod tests {
         // "matched" are the same.
         let new_event = transform.transform(event2).unwrap();
         assert_eq!(new_event.as_log()[&"matched".into()], 123.into());
+    }
+
+    // Test that two events where the matched field is a sub object and that object contains values
+    // for that have different types but the same string representation aren't considered duplicates.
+    #[test]
+    fn dedupe_test_type_matching_nested_objects() {
+        let mut map1: HashMap<Atom, Value> = HashMap::new();
+        map1.insert("key".into(), "123".into());
+        let mut event1 = Event::from("message");
+        event1.as_mut_log().insert("matched", map1);
+
+        let mut map2: HashMap<Atom, Value> = HashMap::new();
+        map2.insert("key".into(), 123.into());
+        let mut event2 = Event::from("message");
+        event2.as_mut_log().insert("matched", map2);
+
+        let mut transform = Dedupe::new(5, vec!["matched".into()]);
+
+        // First event should always be passed through as-is.
+        let new_event = transform.transform(event1).unwrap();
+        let res_value = new_event.as_log()[&"matched".into()].clone();
+        if let Value::Map(map) = res_value {
+            assert_eq!(map.get(&"key".into()).unwrap().clone(), Value::from("123"));
+        }
+
+        // Second event should also get passed through even though the string representations of
+        // "matched" are the same.
+        let new_event = transform.transform(event2).unwrap();
+        let res_value = new_event.as_log()[&"matched".into()].clone();
+        if let Value::Map(map) = res_value {
+            assert_eq!(map.get(&"key".into()).unwrap().clone(), Value::from(123));
+        }
     }
 }
