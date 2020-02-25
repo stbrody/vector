@@ -5,13 +5,7 @@
 
 [[tests]]
   name = "dedupe_simple"
-  [tests.inputs]
-    insert_at = "dedupe_simple"
-    type = "log"
-    [tests.input.log_fields]
-      a = 3
-      b = 4
-  [tests.inputs]
+  [tests.input]
     insert_at = "dedupe_simple"
     type = "log"
     [tests.input.log_fields]
