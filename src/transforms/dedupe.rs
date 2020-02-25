@@ -8,7 +8,7 @@ use chrono::{DateTime, Utc};
 use lru::LruCache;
 use serde::{Deserialize, Serialize};
 use std::any::TypeId;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use string_cache::DefaultAtom as Atom;
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -85,7 +85,7 @@ fn type_id_for_value(val: &Value) -> TypeId {
         Value::Integer(_) => TypeId::of::<i64>(),
         Value::Float(_) => TypeId::of::<f64>(),
         Value::Boolean(_) => TypeId::of::<bool>(),
-        Value::Map(_) => TypeId::of::<HashMap<Atom, Value>>(),
+        Value::Map(_) => TypeId::of::<BTreeMap<Atom, Value>>(),
         Value::Array(_) => TypeId::of::<Vec<Value>>(),
         // There's no real type in Rust for Null, so we make a new type just for getting a unique
         // TypeId. All that matters is that all possible Value types have a distinct TypeId.
@@ -137,7 +137,7 @@ impl Transform for Dedupe {
 mod tests {
     use super::Dedupe;
     use crate::{event::Event, event::Value, transforms::Transform};
-    use std::collections::HashMap;
+    use std::collections::BTreeMap;
     use string_cache::DefaultAtom as Atom;
 
     #[test]
@@ -197,7 +197,7 @@ mod tests {
     // issue (meaning it's possible for this test to pass even if the bug of the transform
     // caring about field order is present).  This is difficult to avoid because Event is
     // backed by a HashMap and there's no way to deterministically control what order the
-    // objects will be stored in table underlying the HashMap.
+    // objects will be stored in table underlying the HashMap. // TODO
     #[test]
     fn dedupe_test_field_order_irrelevant() {
         let mut event1 = Event::from("message");
@@ -276,12 +276,12 @@ mod tests {
     // for that have different types but the same string representation aren't considered duplicates.
     #[test]
     fn dedupe_test_type_matching_nested_objects() {
-        let mut map1: HashMap<Atom, Value> = HashMap::new();
+        let mut map1: BTreeMap<Atom, Value> = BTreeMap::new();
         map1.insert("key".into(), "123".into());
         let mut event1 = Event::from("message");
         event1.as_mut_log().insert("matched", map1);
 
-        let mut map2: HashMap<Atom, Value> = HashMap::new();
+        let mut map2: BTreeMap<Atom, Value> = BTreeMap::new();
         map2.insert("key".into(), 123.into());
         let mut event2 = Event::from("message");
         event2.as_mut_log().insert("matched", map2);

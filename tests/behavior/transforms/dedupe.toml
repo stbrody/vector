@@ -2,9 +2,16 @@
   inputs = []
   type = "dedupe"
   fields.match = ["a"]
+
 [[tests]]
   name = "dedupe_simple"
-  [tests.input]
+  [tests.inputs]
+    insert_at = "dedupe_simple"
+    type = "log"
+    [tests.input.log_fields]
+      a = 3
+      b = 4
+  [tests.inputs]
     insert_at = "dedupe_simple"
     type = "log"
     [tests.input.log_fields]
