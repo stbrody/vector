@@ -1038,7 +1038,7 @@ dns_servers = ["0.0.0.0:53"]
   # * type: string
   target = "dest_field_name"
 
-# Accepts and outputs `log` events allowing you to Prevent duplicate Events from being outputted.
+# Accepts and outputs `log` events allowing you to prevent duplicate Events from being outputted.
 [transforms.dedupe]
   #
   # General
