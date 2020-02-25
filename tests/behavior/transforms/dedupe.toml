@@ -5,15 +5,33 @@
 
 [[tests]]
   name = "dedupe_simple"
-  [tests.input]
+  [[tests.inputs]]
     insert_at = "dedupe_simple"
     type = "log"
-    [tests.input.log_fields]
-      a = 3
+    [tests.inputs.log_fields]
+      a = 1
+      b = 2
+  [[tests.inputs]]
+    insert_at = "dedupe_simple"
+    type = "log"
+    [tests.inputs.log_fields]
+      a = 1
+      b = 3
+  [[tests.inputs]]
+    insert_at = "dedupe_simple"
+    type = "log"
+    [tests.inputs.log_fields]
+      a = 2
       b = 4
   [[tests.outputs]]
     extract_from = "dedupe_simple"
     [[tests.outputs.conditions]]
       type = "check_fields"
-      "a.equals" = 3
+      "a.equals" = 1
+      "b.equals" = 2
+  [[tests.outputs]]
+    extract_from = "dedupe_simple"
+    [[tests.outputs.conditions]]
+      type = "check_fields"
+      "a.equals" = 2
       "b.equals" = 4
