@@ -193,16 +193,10 @@ mod tests {
 
     // Test that two Events that are considered duplicates get handled that way, even
     // if the order of the matched fields is different between the two.
-    // Note that this test is a bit non-deterministic in its ability to test the underlying
-    // issue (meaning it's possible for this test to pass even if the bug of the transform
-    // caring about field order is present).  This is difficult to avoid because Event is
-    // backed by a HashMap and there's no way to deterministically control what order the
-    // objects will be stored in table underlying the HashMap. // TODO
     #[test]
     fn dedupe_test_field_order_irrelevant() {
         let mut event1 = Event::from("message");
         event1.as_mut_log().insert("matched1", "value1");
-        event1.as_mut_log().insert("randomData", "ignored"); // Helps force field order to be different more often
         event1.as_mut_log().insert("matched2", "value2");
 
         // Add fields in opposite order
