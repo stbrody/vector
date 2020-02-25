@@ -42,16 +42,6 @@ import CodeHeader from '@site/src/components/CodeHeader';
     match = ["timestamp"] # default
 ```
 
-## Requirements
-
-import Alert from '@site/src/components/Alert';
-
-<Alert type="danger" fill={true} icon={false}>
-
-#<Requirements:0x0000564d7845f170>
-
-</Alert>
-
 ## Options
 
 import Fields from '@site/src/components/Fields';
