@@ -76,6 +76,8 @@ impl TransformConfig for DedupeConfig {
 
 type CacheEntry = Vec<Option<(TypeId, Bytes)>>;
 
+struct Null;
+
 fn type_id_for_value(val: &Value) -> TypeId {
     match val {
         Value::Bytes(_) => TypeId::of::<Bytes>(),
@@ -85,6 +87,9 @@ fn type_id_for_value(val: &Value) -> TypeId {
         Value::Boolean(_) => TypeId::of::<bool>(),
         Value::Map(_) => TypeId::of::<HashMap<Atom, Value>>(),
         Value::Array(_) => TypeId::of::<Vec<Value>>(),
+        // There's no real type in Rust for Null, so we make a new type just for getting a unique
+        // TypeId. All that matters is that all possible Value types have a distinct TypeId.
+        Value::Null => TypeId::of::<Null>(),
     }
 }
 
